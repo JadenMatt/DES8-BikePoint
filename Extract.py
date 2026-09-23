@@ -21,6 +21,24 @@ os.makedirs(data_dir, exist_ok = True)
 timestamp = datetime.now().strftime('%Y-%m-%d %H-%M-%S') # - Don't use / when creating a file name
 filename = f'{data_dir}/{timestamp}.json' 
 
+#Create a folder for log files if it doesn't already exist
+
+log_dir ='log'
+os.makedirs(log_dir, exist_ok = True)
+log_filename = f'{log_dir}/{timestamp}.json'
+
+# Configure logging so messages are written to the log file
+
+logging.basicConfig(
+    filename=log_filename
+    format= '%(asctime)s - %(levelname)s - %(message)s', 
+    level= logging.INFO
+)
+
+# Create the logger and confirm it works
+
+logger = logging.getlogger()
+logger.info('Logger successfully Initiated')
 
 # Set up retry setting in case the API fails
 
@@ -32,13 +50,10 @@ delay = 10
 
 while attempt < max_retry:
 
-    # Send a GET request to the API
+    # Some variables need to be inside while loop as they need to change on each attempt
 
-    response = requests.get(url)
-
-    # Set status variable 
-
-    status = response.status_code
+    response = requests.get(url) # Send a GET request to the API
+    status = response.status_code  # Set status variable 
 
     # If statement based on status code
 
@@ -51,13 +66,16 @@ while attempt < max_retry:
                 with open(filename, 'w') as file:
                     json.dump(data, file) # Open the output file and write the API data to it as JSON
                 print(f'{filename} was successfully saved :)') # Print success message for user
+                logger.info(f'File {filename} was successfully saved')
 
             except Exception as e:
                 print(f'An error has occured {e}')
+                logger.error(f'An error has occured {e}')
             break
 
         else: 
             print('No data returned')
+            logger.warning('No data returned')
             break
     
 
@@ -65,7 +83,9 @@ while attempt < max_retry:
         time.sleep(delay)
         attempt += 1
         print(f'Status_code: {status}. Retrying, attempt number {attempt}')
+        logger.info(f'Status_code: {status}. Retrying, attempt number {attempt}')
 
     else:
         print(f'Error, Status code {status}, Fix it') # Statement for all other erors
+        logger.critical(f'Error, Status code {status}, Fix it')
         break
