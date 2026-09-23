@@ -30,14 +30,14 @@ log_filename = f'{log_dir}/{timestamp}.json'
 # Configure logging so messages are written to the log file
 
 logging.basicConfig(
-    filename=log_filename
+    filename=log_filename,
     format= '%(asctime)s - %(levelname)s - %(message)s', 
     level= logging.INFO
 )
 
 # Create the logger and confirm it works
 
-logger = logging.getlogger()
+logger = logging.getLogger()
 logger.info('Logger successfully Initiated')
 
 # Set up retry setting in case the API fails
@@ -83,9 +83,8 @@ while attempt < max_retry:
         time.sleep(delay)
         attempt += 1
         print(f'Status_code: {status}. Retrying, attempt number {attempt}')
-        logger.info(f'Status_code: {status}. Retrying, attempt number {attempt}')
+        logger.info()
 
     else:
         print(f'Error, Status code {status}, Fix it') # Statement for all other erors
-        logger.critical(f'Error, Status code {status}, Fix it')
         break
