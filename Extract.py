@@ -25,7 +25,7 @@ filename = f'{data_dir}/{timestamp}.json'
 
 log_dir ='log'
 os.makedirs(log_dir, exist_ok = True)
-log_filename = f'{log_dir}/{timestamp}.json'
+log_filename = f'{log_dir}/{timestamp}.log'
 
 # Configure logging so messages are written to the log file
 
