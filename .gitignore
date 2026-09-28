@@ -219,3 +219,6 @@ __marimo__/
 
 #JSON
 *.JSON
+
+#log
+*.log
