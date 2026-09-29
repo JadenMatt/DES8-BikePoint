@@ -1,33 +1,33 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
 import requests
 import json
+import time
+
+logger = logging.getLogger(__name__)
 
 
-def extractor(url:str, timestamp:str, max_retry:int, delay:int, data_dir:str):
-    # API endpoint we want to extract data from
+def extractor(url:str, data_dir:str, timestamp:str, max_retry:int, delay:int):
+    """Extracts JSON from specified URL and saves locally in the data dir
 
-
-    url = 'https://api.tfl.gov.uk/BikePoint/'
-
-    # Create folder for extracted data
-
-    data_dir = 'data'
-    os.makedirs(data_dir, exist_ok = True)
+    Args:
+        url (str): The URL you want to download JSON from
+        data_dir (str): Where to save the data
+        timestamp (str): The filename will be this
+        max_retry (int): The max number of times API will be retried
+        delay (int): How long to wait between retries (seconds)
+    """
 
     # Create a timestamp so each extract gets a unique filename
 
-    timestamp = datetime.now().strftime('%Y-%m-%d %H-%M-%S') # - Don't use / when creating a file name
+    os.makedirs(data_dir, exist_ok = True)
+
     filename = f'{data_dir}/{timestamp}.json' 
-
-
 
     # Set up retry setting in case the API fails
 
-    max_retry = 5
     attempt = 0
-    delay = 10
 
     # While loop
 
